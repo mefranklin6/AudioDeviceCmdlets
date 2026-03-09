@@ -9,11 +9,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$repo = 'mefranklin/AudioDeviceCmdlets'
+$repo = 'mefranklin6/AudioDeviceCmdlets'
 $moduleName = 'AudioDeviceCmdlets'
 
 if (-not $Version) {
-    throw "Version is required (example: -Version 3.1.0.2). Install from 'latest' is intentionally not supported to keep installs deterministic."
+    throw "Version is required (example: -Version 3.2). Install from 'latest' is intentionally not supported to keep installs deterministic."
 }
 
 $tag = if ($Version.StartsWith('v')) { $Version } else { "v$Version" }

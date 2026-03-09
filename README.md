@@ -31,9 +31,9 @@ This fork publishes a ready-to-install PowerShell module zip to GitHub Releases.
 
 ```PowerShell
 Set-ExecutionPolicy -Scope Process Bypass
-$version = '3.1.0.2'
+$version = '3.2'
 $tag = "v$version"
-Invoke-WebRequest "https://raw.githubusercontent.com/mefranklin/AudioDeviceCmdlets/$tag/install.ps1" -OutFile .\install.ps1
+Invoke-WebRequest "https://raw.githubusercontent.com/mefranklin6/AudioDeviceCmdlets/$tag/install.ps1" -OutFile .\install.ps1
 ./install.ps1 -Version $version -Scope CurrentUser
 ```
 
