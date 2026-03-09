@@ -115,6 +115,12 @@ Write-AudioDevice -RecordingMeter  # Write the default recording device's power 
 Write-AudioDevice -RecordingStream  # Write the default recording device's power output on 100 as a stream of <int>
 ```
 
+## Versions
+
+- v3.2: Initial fork release. The underlying code and features are unchanged.
+  - Updated the readme
+  - Added CI/CD including a release build script and Github Advanced Security setup (CodeQL, Dependabot)
+
 ## Attribution
 
 This is a fork of [frgnca/AudioDeviceCmdlets](https://github.com/frgnca/AudioDeviceCmdlets), which attributed the below:
@@ -123,3 +129,7 @@ Based on code originally posted to Code Project by Ray Molenkamp with comments a
 <http://www.codeproject.com/Articles/18520/Vista-Core-Audio-API-Master-Volume-Control>  
 Based on code originally posted to GitHub by Chris Hunt  
 <https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet>  
+
+## Donation
+
+Some of the original authors have donation links or crypto wallet addresses. If you would like to donate to them, follow the links above. No donation will be accepted on this fork, but the thought is appreciated.
