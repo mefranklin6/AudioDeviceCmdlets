@@ -1,6 +1,12 @@
-## Description
+# AudioDeviceCmdlets
 
-AudioDeviceCmdlets is a suite of PowerShell Cmdlets to control audio devices on Windows
+A suite of PowerShell Cmdlets to control audio devices on Windows, with CI/CD.
+
+## Fork Notes
+
+This is a fork of [frgnca/AudioDeviceCmdlets](https://github.com/frgnca/AudioDeviceCmdlets). The reason for this fork is to add a CI/CD and allow PC's to install straight from Github, instead of from PowerShellGallery via NuGet.
+
+I intend to keep the base code sync'd with the above project as much as practical, while also incorporating some un-merged pull requests from the above after review.
 
 ## Features
 
@@ -13,14 +19,6 @@ Set default audio device (playback/recording)
 Set default communication audio device (playback/recording)  
 Set volume and mute state of default audio device (playback/recording)  
 Set volume and mute state of default communication audio device (playback/recording)
-
-## Installation
-
-Run as administrator
-
-```PowerShell
-Install-Module -Name AudioDeviceCmdlets
-```
 
 ## Usage
 
@@ -77,69 +75,9 @@ Write-AudioDevice -RecordingMeter  # Write the default recording device's power 
 Write-AudioDevice -RecordingStream  # Write the default recording device's power output on 100 as a stream of <int>
 ```
 
-## Build Cmdlet from source
-
-<details>
-  <summary>Build instructions</summary>
-
-1. Install Visual Studio 2022
-
-  Workloads: .NET desktop development
-
-2. Create new project from SOURCE folder  
-File -> New -> Project From Existing Code...
-
-  Type of project: Visual C#
-  Folder: SOURCE
-  Name: AudioDeviceCmdlets
-  Output type: Class Library
-
-3. Set project properties  
-Project -> AudioDeviceCmdlets Properties
-
-  Assembly name: AudioDeviceCmdlets
-  Target framework: .NET Framework 4.6.1+
-
-4. Install System.Management.Automation NuGet legacy package  
-Project -> Manage NuGet Packages...
-
-  Package source: nuget.org
-  Browse: Microsoft.PowerShell.5.1.ReferenceAssemblies
-  Install: v1.0.0+
-
-5. Set solution configuration  
-Build -> Configuration Manager...
-
-  Active solution configuration: Release
-
-6. Build Cmdlet  
-Build -> Build Solution
-
-  AudioDeviceCmdlets\SOURCE\bin\Release\AudioDeviceCmdlets.dll
-
-7. Import Cmdlet to PowerShell on Windows
- ```PowerShell
- $FilePath = "C:\Path\To\AudioDeviceCmdlets\SOURCE\bin\Release\AudioDeviceCmdlets.dll"
- New-Item "$($profile | split-path)\Modules\AudioDeviceCmdlets" -Type directory -Force
- Copy-Item $FilePath "$($profile | split-path)\Modules\AudioDeviceCmdlets\AudioDeviceCmdlets.dll"
- Set-Location "$($profile | Split-Path)\Modules\AudioDeviceCmdlets"
- Get-ChildItem | Unblock-File
- Import-Module AudioDeviceCmdlets
- ```
-
-</details>
-
-## Donation
-
-<details>
-  <summary>Thank you for considering a donation</summary>
-
- Bitcoin  (BTC) 3AffczXX4Jb2iN8QWQhHQAsj9AqGFXgYUF
- BitcoinCash (BCH) qraf6a3fklta7xkvwkh49zqn6mgnm2eyz589rkfvl3
- Ethereum (ETH) 0xE4EA2A2356C04c8054Db452dCBd6f958F74722dE
-</details>
-
 ## Attribution
+
+This is a fork of [frgnca/AudioDeviceCmdlets](https://github.com/frgnca/AudioDeviceCmdlets), which attributed the below:
 
 Based on code originally posted to Code Project by Ray Molenkamp with comments and suggestions by MadMidi  
 <http://www.codeproject.com/Articles/18520/Vista-Core-Audio-API-Master-Volume-Control>  
