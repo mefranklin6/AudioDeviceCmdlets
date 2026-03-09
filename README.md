@@ -20,6 +20,42 @@ Set default communication audio device (playback/recording)
 Set volume and mute state of default audio device (playback/recording)  
 Set volume and mute state of default communication audio device (playback/recording)
 
+## Install (from GitHub Releases)
+
+This fork publishes a ready-to-install PowerShell module zip to GitHub Releases.
+
+### Option A: install via the included installer script (version-pinned)
+
+1. Pick a released version from the Releases page.
+2. Run:
+
+```PowerShell
+Set-ExecutionPolicy -Scope Process Bypass
+$version = '3.1.0.2'
+$tag = "v$version"
+Invoke-WebRequest "https://raw.githubusercontent.com/mefranklin/AudioDeviceCmdlets/$tag/install.ps1" -OutFile .\install.ps1
+./install.ps1 -Version $version -Scope CurrentUser
+```
+
+### Option B: manual install (download + unzip)
+
+1. Download the release asset named `AudioDeviceCmdlets-<version>.zip`.
+2. Unzip it into one of these module locations:
+
+- Current user: `$HOME\Documents\WindowsPowerShell\Modules\`
+- All users: `$env:ProgramFiles\WindowsPowerShell\Modules\`
+
+After unzipping, you should end up with:
+
+`...\Modules\AudioDeviceCmdlets\AudioDeviceCmdlets.psd1`
+
+Then you can:
+
+```PowerShell
+Import-Module AudioDeviceCmdlets
+Get-Command -Module AudioDeviceCmdlets
+```
+
 ## Usage
 
 ```PowerShell
