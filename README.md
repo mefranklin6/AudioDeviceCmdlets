@@ -29,17 +29,9 @@ This fork publishes a ready-to-install PowerShell module zip to GitHub Releases.
 1. Pick a released version from the Releases page.
 2. Run:
 
-```PowerShell
-Set-ExecutionPolicy -Scope Process Bypass
-$version = '3.2'
-$tag = "v$version"
-
-# Get the latest installer
-Invoke-WebRequest "https://raw.githubusercontent.com/mefranklin6/AudioDeviceCmdlets/main/install.ps1" -OutFile .\install.ps1
-
-# Install the pinned version
-./install.ps1 -Version $version -Scope CurrentUser
-```
+    ```PowerShell
+    & ([ScriptBlock]::Create((Invoke-RestMethod 'https://raw.githubusercontent.com/mefranklin6/AudioDeviceCmdlets/master/install.ps1'))) -PC 'localhost' -Version '3.2'
+    ```
 
 ### Option B: manual install (download + unzip)
 
