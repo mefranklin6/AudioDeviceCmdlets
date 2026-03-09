@@ -1,0 +1,66 @@
+name: release
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Version (e.g. 3.1.0.2)"
+                required: true
+
+permissions:
+    contents: write
+
+jobs:
+    build-and-release:
+        runs-on: windows-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "8.0.x"
+
+            - name: Resolve version
+              id: ver
+              shell: pwsh
+              run: |
+                  $version = "${{ github.event.inputs.version }}"
+                  if (-not $version) {
+                    $ref = "${{ github.ref_name }}"
+                    $version = $ref.TrimStart('v')
+                  }
+                  "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+            - name: Build module
+              shell: pwsh
+              run: |
+                  ./build.ps1 -Version "${{ steps.ver.outputs.version }}" -Configuration Release -OutputDir artifacts
+
+            - name: Create release zip
+              shell: pwsh
+              run: |
+                  $version = "${{ steps.ver.outputs.version }}"
+                  $moduleName = 'AudioDeviceCmdlets'
+                  $zipName = "$moduleName-$version.zip"
+                  $artifactRoot = Join-Path $PWD 'artifacts'
+                  $zipPath = Join-Path $PWD $zipName
+
+                  if (Test-Path $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
+                  Compress-Archive -Path (Join-Path $artifactRoot $moduleName) -DestinationPath $zipPath
+
+                  Get-FileHash -Algorithm SHA256 -Path $zipPath | ForEach-Object {
+                    "$($_.Hash)  $zipName" | Out-File -FilePath ("$zipName.sha256") -Encoding ascii
+                  }
+
+            - name: Publish GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: |
+                      AudioDeviceCmdlets-${{ steps.ver.outputs.version }}.zip
+                      AudioDeviceCmdlets-${{ steps.ver.outputs.version }}.zip.sha256
