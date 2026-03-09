@@ -27,7 +27,11 @@ This fork publishes a ready-to-install PowerShell module zip to GitHub Releases.
 ### Option A: install via the included installer script (version-pinned)
 
 1. Pick a released version from the Releases page.
-2. Run:
+2. Run the below commands in Powershell:
+
+- `-Version`: The release version from step 1.
+
+- `-PC`: Use 'localhost' or specify a remote computer.
 
     ```PowerShell
     & ([ScriptBlock]::Create((Invoke-RestMethod 'https://raw.githubusercontent.com/mefranklin6/AudioDeviceCmdlets/master/install.ps1'))) -PC 'localhost' -Version '3.2'
@@ -110,8 +114,8 @@ Write-AudioDevice -RecordingStream  # Write the default recording device's power
 ## Versions
 
 - v3.2: Initial fork release. The underlying code and features are unchanged.
-  - Updated the readme
-  - Added CI/CD including a release build script and Github Advanced Security setup (CodeQL, Dependabot)
+  - Updated the readme to reflect changes.
+  - Added CI/CD including a build script, installer script and Github Advanced Security setup (CodeQL, Dependabot)
 
 ## Attribution
 
