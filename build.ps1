@@ -35,18 +35,20 @@ if (-not (Test-Path $dllPath)) {
 Copy-Item -LiteralPath $dllPath -Destination (Join-Path $moduleDir "$moduleName.dll") -Force
 
 $manifestPath = Join-Path $moduleDir "$moduleName.psd1"
-New-ModuleManifest \
--Path $manifestPath \
--RootModule "$moduleName.dll" \
--ModuleVersion $Version \
--Guid '7156b1c0-8e86-4d19-8df1-058c15629f36' \
--Author 'frgnca (fork: mefranklin)' \
--CompanyName 'frgnca' \
--Description 'A suite of PowerShell Cmdlets to control audio devices on Windows.' \
--CompatiblePSEditions @('Desktop', 'Core') \
--PowerShellVersion '5.1' \
--CmdletsToExport @('Get-AudioDevice', 'Set-AudioDevice', 'Write-AudioDevice') \
--FunctionsToExport @() \
--AliasesToExport @() | Out-Null
+$manifestParams = @{
+    Path                 = $manifestPath
+    RootModule           = "$moduleName.dll"
+    ModuleVersion        = $Version
+    Guid                 = '7156b1c0-8e86-4d19-8df1-058c15629f36'
+    Author               = 'frgnca (fork: mefranklin)'
+    CompanyName          = 'frgnca'
+    Description          = 'A suite of PowerShell Cmdlets to control audio devices on Windows.'
+    CompatiblePSEditions = @('Desktop', 'Core')
+    PowerShellVersion    = '5.1'
+    CmdletsToExport      = @('Get-AudioDevice', 'Set-AudioDevice', 'Write-AudioDevice')
+    FunctionsToExport    = @()
+    AliasesToExport      = @()
+}
+New-ModuleManifest @manifestParams | Out-Null
 
 "Built module to: $moduleDir" | Write-Host
