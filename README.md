@@ -4,7 +4,7 @@ A suite of PowerShell Cmdlets to control audio devices on Windows, with CI/CD.
 
 ## Fork Notes
 
-This is a fork of [frgnca/AudioDeviceCmdlets](https://github.com/frgnca/AudioDeviceCmdlets). The reason for this fork is to add a CI/CD and allow PC's to install straight from Github, instead of from PowerShellGallery via NuGet.
+This is a fork of [frgnca/AudioDeviceCmdlets](https://github.com/frgnca/AudioDeviceCmdlets). The reason for this fork is to add a CI/CD (including code scanning, dependency alerts) and allow PC's to install straight from Github, instead of from PowerShellGallery via NuGet.
 
 I intend to keep the base code sync'd with the above project as much as practical, while also incorporating some un-merged pull requests from the above after review.
 
