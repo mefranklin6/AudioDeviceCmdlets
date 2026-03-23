@@ -9,7 +9,7 @@
 		<Company>Origional work: frgnca;Fork modifications: California State University, Chico</Company>
 		<Product>AudioDeviceCmdlets</Product>
 		<Copyright>Original work (c) 2016-2022 Francois Gendron &lt;fg@frgn.ca&gt;; fork modifications (c) 2026 Matthew Franklin</Copyright>
-		<Version>3.1.0.2</Version>
+		<Version>3.3</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<InformationalVersion>$(Version)</InformationalVersion>
