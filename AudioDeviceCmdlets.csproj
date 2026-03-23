@@ -4,7 +4,13 @@
 		<AssemblyName>AudioDeviceCmdlets</AssemblyName>
 		<RootNamespace>AudioDeviceCmdlets</RootNamespace>
 		<LangVersion>latest</LangVersion>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Title>AudioDeviceCmdlets</Title>
+		<Description>AudioDeviceCmdlets is a suite of PowerShell Cmdlets to control audio devices on Windows</Description>
+		<Company>frgnca</Company>
+		<Product>AudioDeviceCmdlets</Product>
+		<Copyright>(c) 2016-2022 Francois Gendron &lt;fg@frgn.ca&gt;</Copyright>
+		<AssemblyVersion>3.1.0.2</AssemblyVersion>
+		<FileVersion>3.1.0.2</FileVersion>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	</PropertyGroup>
 
