@@ -169,6 +169,30 @@ try {
             return $null
         }
 
+        function Remove-OlderInstalledVersions {
+            param(
+                [Parameter(Mandatory = $true)]
+                [string[]]$ModuleRoots,
+                [Parameter(Mandatory = $true)]
+                [string]$ModuleName,
+                [Parameter(Mandatory = $true)]
+                [string]$KeepVersion
+            )
+
+            foreach ($root in ($ModuleRoots | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique)) {
+                $moduleRoot = Join-Path $root $ModuleName
+                if (-not (Test-Path -LiteralPath $moduleRoot)) {
+                    continue
+                }
+
+                Get-ChildItem -LiteralPath $moduleRoot -Directory -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -ne $KeepVersion } |
+                ForEach-Object {
+                    Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
+                }
+            }
+        }
+
         $modulePaths = @()
         if (-not [string]::IsNullOrWhiteSpace($env:PSModulePath)) {
             $modulePaths = $env:PSModulePath -split ';' | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
@@ -193,7 +217,7 @@ try {
                 $userCandidates += (Join-Path $myDocs 'PowerShell\Modules')
             }
 
-            $installRoot = Get-WritableModuleRoot -Candidates (($userCandidates + $modulePaths) | Select-Object -Unique)
+            $installRoot = Get-WritableModuleRoot -Candidates (($modulePaths + $userCandidates) | Select-Object -Unique)
         }
 
         if ([string]::IsNullOrWhiteSpace($installRoot)) {
@@ -202,10 +226,12 @@ try {
 
         $destVersionRoot = Join-Path (Join-Path $installRoot $ModuleName) $ModuleVersion
         $destManifestPath = Join-Path $destVersionRoot "${ModuleName}.psd1"
+        $allKnownModuleRoots = @($systemCandidates + $userCandidates + $modulePaths + $installRoot) | Select-Object -Unique
 
         if (Test-Path -LiteralPath $destManifestPath) {
             try {
                 Import-Module -Name $destManifestPath -Force -ErrorAction Stop
+                Remove-OlderInstalledVersions -ModuleRoots $allKnownModuleRoots -ModuleName $ModuleName -KeepVersion $ModuleVersion
                 Write-Output "$env:COMPUTERNAME $ModuleName $ModuleVersion already installed at $destVersionRoot, skipping."
                 return
             }
@@ -241,6 +267,7 @@ try {
         }
         $moduleSourceRoot = Split-Path -Parent $manifest.FullName
 
+        Remove-OlderInstalledVersions -ModuleRoots $allKnownModuleRoots -ModuleName $ModuleName -KeepVersion $ModuleVersion
         Remove-Item -LiteralPath $destVersionRoot -Recurse -Force -ErrorAction SilentlyContinue
         $null = New-Item -ItemType Directory -Path $destVersionRoot -Force
 
