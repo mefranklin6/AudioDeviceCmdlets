@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2016-2022 Francois Gendron <fg@frgn.ca>
+    Copyright (c) 2026 Matthew Franklin (mefranklin6) (for modifications)
   MIT License
 
   AudioDeviceCmdlets.cs
@@ -9,11 +10,34 @@
 
 // To interact with MMDevice
 using CoreAudioApi;
+using System.Reflection;
 // To act as a PowerShell Cmdlet
 using System.Management.Automation;
 
 namespace AudioDeviceCmdlets
 {
+    internal static class AudioDeviceVersionInfo
+    {
+        public static string GetVersionText()
+        {
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            return string.Format(@"
+  AudioDeviceCmdlets v{0}
+
+  Copyright (c) 2016-2022 Francois Gendron <fg@frgn.ca>
+    Copyright (c) 2026 Matthew Franklin (mefranklin6) (for modifications)
+  MIT License
+
+
+  Thank you for considering a donation (these go to Francois Gendron only)
+  Bitcoin     (BTC) 3AffczXX4Jb2iN8QWQhHQAsj9AqGFXgYUF
+  BitcoinCash (BCH) qraf6a3fklta7xkvwkh49zqn6mgnm2eyz589rkfvl3
+  Ethereum    (ETH) 0xE4EA2A2356C04c8054Db452dCBd6f958F74722dE
+", version);
+        }
+    }
+
     // Class to interact with a MMDevice as an object with attributes
     public class AudioDevice
     {
@@ -100,7 +124,7 @@ namespace AudioDeviceCmdlets
             for (int i = 0; i < DeviceCollection.Count; i++)
             {
                 // If the received ID is the same as this device's ID
-                if(DeviceCollection[i].ID == ID)
+                if (DeviceCollection[i].ID == ID)
                 {
                     // Return this device's Index
                     return (i + 1);
@@ -123,7 +147,7 @@ namespace AudioDeviceCmdlets
             catch { }
 
             // If the received ID is the same as the default playback device's ID
-            if(ID == PlaybackID)
+            if (ID == PlaybackID)
             {
                 return (true);
             }
@@ -359,7 +383,7 @@ namespace AudioDeviceCmdlets
                     // Output the result of the creation of a new AudioDevice, while assining it its index, the MMDevice itself, its default state, and its default communication state
                     WriteObject(new AudioDevice(i + 1, DeviceCollection[i], Toolkit.IsDefault(DeviceCollection[i].ID), Toolkit.IsDefaultCommunication(DeviceCollection[i].ID)));
                 }
-                
+
                 // Stop checking for other parameters
                 return;
             }
@@ -554,7 +578,7 @@ namespace AudioDeviceCmdlets
             }
 
             // If the PlaybackVolume switch parameter was called
-            if(playbackvolume)
+            if (playbackvolume)
             {
                 MMDevice Device = null;
                 try
@@ -716,21 +740,8 @@ namespace AudioDeviceCmdlets
             // If the Version parameter was called
             if (version)
             {
-                // Version text
-                string text = @"
-  AudioDeviceCmdlets v3.1.0.2
-
-  Copyright (c) 2016-2022 Francois Gendron <fg@frgn.ca>
-  MIT License
-
-  Thank you for considering a donation
-  Bitcoin     (BTC) 3AffczXX4Jb2iN8QWQhHQAsj9AqGFXgYUF
-  BitcoinCash (BCH) qraf6a3fklta7xkvwkh49zqn6mgnm2eyz589rkfvl3
-  Ethereum    (ETH) 0xE4EA2A2356C04c8054Db452dCBd6f958F74722dE
-";
-
                 // Write version text
-                WriteObject(text);
+                WriteObject(AudioDeviceVersionInfo.GetVersionText());
 
                 // Stop checking for other parameters
                 return;
@@ -1179,7 +1190,7 @@ namespace AudioDeviceCmdlets
                 {
                     // Throw an exception about the device not being found
                     throw new System.ArgumentException("No playback AudioDevice found with the default communication role");
-                }                
+                }
             }
 
             // If the PlaybackCommunicationMuteToggle parameter was called
@@ -1198,7 +1209,7 @@ namespace AudioDeviceCmdlets
             }
 
             // If the PlaybackCommunicationVolume parameter received a value
-            if(playbackcommunicationvolume != null)
+            if (playbackcommunicationvolume != null)
             {
                 try
                 {
@@ -1243,7 +1254,7 @@ namespace AudioDeviceCmdlets
             }
 
             // If the PlaybackVolume parameter received a value
-            if(playbackvolume != null)
+            if (playbackvolume != null)
             {
                 try
                 {
@@ -1350,21 +1361,8 @@ namespace AudioDeviceCmdlets
             // If the Version parameter was called
             if (version)
             {
-                // Version text
-                string text = @"
-  AudioDeviceCmdlets v3.1.0.2
-
-  Copyright (c) 2016-2022 Francois Gendron <fg@frgn.ca>
-  MIT License
-
-  Thank you for considering a donation
-  Bitcoin     (BTC) 3AffczXX4Jb2iN8QWQhHQAsj9AqGFXgYUF
-  BitcoinCash (BCH) qraf6a3fklta7xkvwkh49zqn6mgnm2eyz589rkfvl3
-  Ethereum    (ETH) 0xE4EA2A2356C04c8054Db452dCBd6f958F74722dE
-";
-
                 // Write version text
-                WriteObject(text);
+                WriteObject(AudioDeviceVersionInfo.GetVersionText());
 
                 // Stop checking for other parameters
                 return;
@@ -1535,7 +1533,7 @@ namespace AudioDeviceCmdlets
                     }
                     // Write current audiometer result as a value
                     WriteObject(System.Convert.ToInt32(MasterPeakValue * 100));
-                    
+
                     // Wait 100 milliseconds
                     System.Threading.Thread.Sleep(100);
                 }
@@ -1786,21 +1784,8 @@ namespace AudioDeviceCmdlets
             // If the Version parameter was called
             if (version)
             {
-                // Version text
-                string text = @"
-  AudioDeviceCmdlets v3.1.0.2
-
-  Copyright (c) 2016-2022 Francois Gendron <fg@frgn.ca>
-  MIT License
-
-  Thank you for considering a donation
-  Bitcoin     (BTC) 3AffczXX4Jb2iN8QWQhHQAsj9AqGFXgYUF
-  BitcoinCash (BCH) qraf6a3fklta7xkvwkh49zqn6mgnm2eyz589rkfvl3
-  Ethereum    (ETH) 0xE4EA2A2356C04c8054Db452dCBd6f958F74722dE
-";
-
                 // Write version text
-                WriteObject(text);
+                WriteObject(AudioDeviceVersionInfo.GetVersionText());
 
                 // Stop checking for other parameters
                 return;
