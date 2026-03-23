@@ -6,9 +6,9 @@
 		<LangVersion>latest</LangVersion>
 		<Title>AudioDeviceCmdlets</Title>
 		<Description>AudioDeviceCmdlets is a suite of PowerShell Cmdlets to control audio devices on Windows</Description>
-		<Company>frgnca</Company>
+		<Company>Origional work: frgnca;Fork modifications: California State University, Chico</Company>
 		<Product>AudioDeviceCmdlets</Product>
-		<Copyright>(c) 2016-2022 Francois Gendron &lt;fg@frgn.ca&gt;</Copyright>
+		<Copyright>Original work (c) 2016-2022 Francois Gendron &lt;fg@frgn.ca&gt;; fork modifications (c) 2026 Matthew Franklin</Copyright>
 		<Version>3.1.0.2</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
