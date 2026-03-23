@@ -43,6 +43,8 @@ namespace AudioDeviceCmdlets
     {
         // Order in which this MMDevice appeared from MMDeviceEnumerator
         public int Index;
+        // Enabled is either true or false
+        public bool Enabled;
         // Default (for its Type) is either true or false
         public bool Default;
         // DefaultCommunication (for its Type) is either true or false
@@ -67,6 +69,9 @@ namespace AudioDeviceCmdlets
 
             // Set this object's DefaultCommunication to the received boolean
             this.DefaultCommunication = DefaultCommunication;
+
+            // Set this object's Enabled to the received MMDevice's state
+            this.Enabled = BaseDevice.State == EDeviceState.DEVICE_STATE_ACTIVE;
 
             // If the received MMDevice is a playback device
             if (BaseDevice.DataFlow == EDataFlow.eRender)
@@ -216,6 +221,15 @@ namespace AudioDeviceCmdlets
             set { list = value; }
         }
         private bool list;
+
+        // Parameter called to include disabled devices when listing all devices
+        [Parameter(Mandatory = false, ParameterSetName = "List")]
+        public SwitchParameter ShowDisabled
+        {
+            get { return showdisabled; }
+            set { showdisabled = value; }
+        }
+        private bool showdisabled;
 
         // Parameter receiving the ID of the device to get
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ID")]
@@ -368,13 +382,13 @@ namespace AudioDeviceCmdlets
                 MMDeviceCollection DeviceCollection = null;
                 try
                 {
-                    // Enumerate all enabled devices in a collection
+                    // Enumerate all active devices in a collection
                     DeviceCollection = DevEnum.EnumerateAudioEndPoints(EDataFlow.eAll, EDeviceState.DEVICE_STATE_ACTIVE);
                 }
                 catch
                 {
                     // Error
-                    throw new System.Exception("Error in parameter List - Failed to create the collection of all enabled MMDevice using MMDeviceEnumerator");
+                    throw new System.Exception("Error in parameter List - Failed to create the collection of all active MMDevice using MMDeviceEnumerator");
                 }
 
                 // For every MMDevice in DeviceCollection
@@ -382,6 +396,28 @@ namespace AudioDeviceCmdlets
                 {
                     // Output the result of the creation of a new AudioDevice, while assining it its index, the MMDevice itself, its default state, and its default communication state
                     WriteObject(new AudioDevice(i + 1, DeviceCollection[i], Toolkit.IsDefault(DeviceCollection[i].ID), Toolkit.IsDefaultCommunication(DeviceCollection[i].ID)));
+                }
+
+                if (showdisabled)
+                {
+                    MMDeviceCollection DisabledDeviceCollection = null;
+                    try
+                    {
+                        // Enumerate all disabled devices in a collection
+                        DisabledDeviceCollection = DevEnum.EnumerateAudioEndPoints(EDataFlow.eAll, EDeviceState.DEVICE_STATE_DISABLED);
+                    }
+                    catch
+                    {
+                        // Error
+                        throw new System.Exception("Error in parameter ShowDisabled - Failed to create the collection of all disabled MMDevice using MMDeviceEnumerator");
+                    }
+
+                    // Append disabled devices after active devices so existing active indexes remain unchanged
+                    for (int i = 0; i < DisabledDeviceCollection.Count; i++)
+                    {
+                        int disabledIndex = DeviceCollection.Count + i + 1;
+                        WriteObject(new AudioDevice(disabledIndex, DisabledDeviceCollection[i], Toolkit.IsDefault(DisabledDeviceCollection[i].ID), Toolkit.IsDefaultCommunication(DisabledDeviceCollection[i].ID)));
+                    }
                 }
 
                 // Stop checking for other parameters
