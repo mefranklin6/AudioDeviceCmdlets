@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $false)]
-    [string]$Version = "0.0.0",
+    [string]$Version,
 
     [Parameter(Mandatory = $false)]
     [ValidateSet("Debug", "Release")]
@@ -14,8 +14,18 @@ $ErrorActionPreference = 'Stop'
 
 $moduleName = 'AudioDeviceCmdlets'
 $repoRoot = Split-Path -Parent $PSCommandPath
+$projectPath = Join-Path $repoRoot "$moduleName.csproj"
 $outputDirFull = Join-Path $repoRoot $OutputDir
 $moduleDir = Join-Path $outputDirFull $moduleName
+
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    [xml]$project = Get-Content -LiteralPath $projectPath
+    $Version = $project.Project.PropertyGroup.Version | Select-Object -First 1
+
+    if ([string]::IsNullOrWhiteSpace($Version)) {
+        throw "Version property not found in $projectPath"
+    }
+}
 
 if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     throw "dotnet SDK is required to build. Install from https://aka.ms/dotnet/download (GitHub Actions uses actions/setup-dotnet)."
@@ -26,7 +36,7 @@ if (Test-Path $moduleDir) {
 }
 New-Item -ItemType Directory -Path $moduleDir -Force | Out-Null
 
-dotnet build (Join-Path $repoRoot "$moduleName.csproj") -c $Configuration
+dotnet build $projectPath -c $Configuration
 
 $dllPath = Join-Path $repoRoot "bin\$Configuration\netstandard2.0\$moduleName.dll"
 if (-not (Test-Path $dllPath)) {

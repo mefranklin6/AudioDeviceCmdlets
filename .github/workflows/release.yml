@@ -1,17 +1,13 @@
 name: release
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version (e.g. 3.2)"
-                required: true
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
     build-and-release:
@@ -30,11 +26,20 @@ jobs:
               id: ver
               shell: pwsh
               run: |
-                  $version = "${{ github.event.inputs.version }}"
+                  [xml]$project = Get-Content -LiteralPath './AudioDeviceCmdlets.csproj'
+                  $version = $project.Project.PropertyGroup.Version | Select-Object -First 1
+
                   if (-not $version) {
-                    $ref = "${{ github.ref_name }}"
-                    $version = $ref.TrimStart('v')
+                    throw 'Version property not found in AudioDeviceCmdlets.csproj'
                   }
+
+                  if ('${{ github.event_name }}' -eq 'push') {
+                    $refVersion = '${{ github.ref_name }}'.TrimStart('v')
+                    if ($refVersion -ne $version) {
+                      throw "Git tag version '$refVersion' does not match project version '$version'"
+                    }
+                  }
+
                   "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
             - name: Build module
@@ -61,6 +66,8 @@ jobs:
             - name: Publish GitHub Release
               uses: softprops/action-gh-release@v2
               with:
+                  tag_name: v${{ steps.ver.outputs.version }}
+                  name: v${{ steps.ver.outputs.version }}
                   files: |
                       AudioDeviceCmdlets-${{ steps.ver.outputs.version }}.zip
                       AudioDeviceCmdlets-${{ steps.ver.outputs.version }}.zip.sha256
