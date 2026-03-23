@@ -11,6 +11,7 @@ I intend to keep the base code sync'd with the above project as much as practica
 ## Features
 
 Get list of all audio devices  
+Optionally include disabled audio devices when listing  
 Get default audio device (playback/recording)  
 Get default communication audio device (playback/recording)  
 Get volume and mute state of default audio device (playback/recording)  
@@ -62,6 +63,7 @@ Get-Command -Module AudioDeviceCmdlets
 Get-AudioDevice -ID <string>   # Get the device with the ID corresponding to the given <string>
 Get-AudioDevice -Index <int>   # Get the device with the Index corresponding to the given <int>
 Get-AudioDevice -List    # Get a list of all enabled devices as <AudioDevice>
+Get-AudioDevice -List -ShowDisabled    # Get a list of all enabled devices, then append disabled devices as <AudioDevice>
 Get-AudioDevice -PlaybackCommunication  # Get the default communication playback device as <AudioDevice>
 Get-AudioDevice -PlaybackCommunicationMute # Get the default communication playback device's mute state as <bool>
 Get-AudioDevice -PlaybackCommunicationVolume # Get the default communication playback device's volume level on 100 as <float>
@@ -75,6 +77,8 @@ Get-AudioDevice -Recording   # Get the default recording device as <AudioDevice>
 Get-AudioDevice -RecordingMute   # Get the default recording device's mute state as <bool>
 Get-AudioDevice -RecordingVolume  # Get the default recording device's volume level on 100 as <float>
 ```
+
+`Get-AudioDevice -List` keeps its existing behavior and returns active devices only. Use `-ShowDisabled` together with `-List` to append disabled devices to the output without changing the indexes of active devices. Returned `<AudioDevice>` objects now include an `Enabled` property.
 
 ```PowerShell
 Set-AudioDevice <AudioDevice>    # Set the given playback/recording device as both the default device and the default communication device, for its type
@@ -113,6 +117,7 @@ Write-AudioDevice -RecordingStream  # Write the default recording device's power
 
 ## Versions
 
+- v3.3: Added `Get-AudioDevice -List -ShowDisabled` and `AudioDevice.Enabled` while preserving the default `-List` behavior and active-device indexing. Refactored and modernized how version number is used and updated.
 - v3.2: Initial fork release. The underlying code and features are unchanged.
   - Updated the readme to reflect changes.
   - Added CI/CD including a build script, installer script and Github Advanced Security setup (CodeQL, Dependabot)
