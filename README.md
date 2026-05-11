@@ -6,7 +6,9 @@ A suite of PowerShell Cmdlets to control audio devices on Windows, with CI/CD.
 
 This is a fork of [frgnca/AudioDeviceCmdlets](https://github.com/frgnca/AudioDeviceCmdlets). The reason for this fork is to add a CI/CD (including code scanning, dependency alerts) and allow PC's to install straight from Github, instead of from PowerShellGallery via NuGet.
 
-I intend to keep the base code sync'd with the above project as much as practical, while also incorporating some un-merged pull requests from the above after review.
+The base code is sync'd with the above project, but this fork also incorporates un-merged pull requests and community enhancements in addition to the ops improvements.
+
+This code is a dependency for [Windows-Audio-and-Display-Baseline-Enforcer](https://github.com/mefranklin6/Windows-Audio-and-Display-Baseline-Enforcer)
 
 ## Features
 
@@ -23,11 +25,11 @@ Set volume and mute state of default communication audio device (playback/record
 
 ## Install (from GitHub Releases)
 
-This fork publishes a ready-to-install PowerShell module zip to GitHub Releases.
+This fork publishes a ready-to-install PowerShell module zip to GitHub Releases. Note: I do not publish to PowershellGallery.
 
 ### Option A: install via the included installer script (version-pinned)
 
-1. Pick a released version from the Releases page.
+1. Pick a released version from the [Releases page](https://github.com/mefranklin6/AudioDeviceCmdlets/releases).
 2. Run the below commands in Powershell:
 
 - `-Version`: The release version from step 1.
@@ -35,7 +37,7 @@ This fork publishes a ready-to-install PowerShell module zip to GitHub Releases.
 - `-PC`: Use 'localhost' or specify a remote computer.
 
     ```PowerShell
-    & ([ScriptBlock]::Create((Invoke-RestMethod 'https://raw.githubusercontent.com/mefranklin6/AudioDeviceCmdlets/master/install.ps1'))) -PC 'localhost' -Version '3.2'
+    & ([ScriptBlock]::Create((Invoke-RestMethod 'https://raw.githubusercontent.com/mefranklin6/AudioDeviceCmdlets/master/install.ps1'))) -PC 'localhost' -Version '3.3'
     ```
 
 ### Option B: manual install (download + unzip)
@@ -117,7 +119,7 @@ Write-AudioDevice -RecordingStream  # Write the default recording device's power
 
 ## Versions
 
-- v3.3: Added `Get-AudioDevice -List -ShowDisabled` and `AudioDevice.Enabled` while preserving the default `-List` behavior and active-device indexing. Refactored and modernized how version number is used and updated.
+- v3.3: Added `Get-AudioDevice -List -ShowDisabled` and `AudioDevice.Enabled` while preserving the default `-List` behavior and active-device indexing. Refactored and modernized how version number is used and updated. This is a modification of [PR #25](https://github.com/frgnca/AudioDeviceCmdlets/pull/25) from the root repository, authored by [frgnca](https://github.com/frgnca) with community input. 
 - v3.2: Initial fork release. The underlying code and features are unchanged.
   - Updated the readme to reflect changes.
   - Added CI/CD including a build script, installer script and Github Advanced Security setup (CodeQL, Dependabot)
